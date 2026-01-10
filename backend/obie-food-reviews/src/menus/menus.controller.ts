@@ -9,4 +9,9 @@ export class MenusController {
     getMenus() {
         return this.menusService.fetchMenus();
     }
+
+    @Get('ingest')
+    async ingestMenus() {
+        return this.menusService.ingestWeekMenus();
+    }
 }
