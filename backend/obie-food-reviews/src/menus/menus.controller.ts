@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Req, UnauthorizedException } from '@nestjs/common';
+import type { Request } from 'express';
 import { MenusService } from './menus.service';
 
 @Controller('/menus')
@@ -10,8 +11,15 @@ export class MenusController {
         return this.menusService.fetchMenus();
     }
 
-    @Get('ingest')
-    async ingestMenus() {
+    @Post('ingest')
+    async ingestMenus(@Req() req: Request) {
+        const auth = req.headers.authorization ?? '';
+        const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+
+        if (token !== process.env.INGEST_SECRET) {
+            throw new UnauthorizedException('Bad ingest secret');
+        }
+
         return this.menusService.ingestWeekMenus();
     }
 
