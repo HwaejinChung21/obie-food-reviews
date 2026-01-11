@@ -41,15 +41,19 @@ export class MenusService {
             itemsByDate[date].push(item);
         }
 
-        
+        // loop through each date group and upsert into the database
         for (const [servedDate, dayItems] of Object.entries(itemsByDate)) {
             const { data: snapshot, error: snapshotError } = await supabase
                 .from('menu_snapshots')
+                // upserting is used to avoid duplicate entries.
+                // insert the row if it doesn't exist
+                // update if it already exists
                 .upsert({
                     dining_hall: diningHall,
                     meal: meal,
                     served_date: servedDate,
                 })
+                // return the row that now exists
                 .select()
                 .single();
 
@@ -57,17 +61,21 @@ export class MenusService {
                 throw snapshotError;
             }
 
+            // delete old items for this snapshot
+            // re-running ingest doesn't duplicate items
             await supabase
                 .from('menu_items')
                 .delete()
                 .eq('snapshot_id', snapshot.id);
 
+            // prepare menu items for insertion
             const menuItems = dayItems.map((item) => ({
                 snapshot_id: snapshot.id,
                 name: item.name,
                 avi_item_id: String(item.id),
             }));
 
+            // insert menu items
             const { error: insertError } = await supabase
                 .from('menu_items')
                 .insert(menuItems);
@@ -82,6 +90,18 @@ export class MenusService {
 
         // Process and store the data in your database
         
+    }
+
+    async fetchMenusFromDB() {
+        const { data, error } = await supabase
+            .from('menu_items')
+            .select('*');
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
     }
 
 }

@@ -5,7 +5,7 @@ import { MenusService } from './menus.service';
 export class MenusController {
     constructor(private readonly menusService: MenusService) {}
 
-    @Get()
+    @Get('avi')
     getMenus() {
         return this.menusService.fetchMenus();
     }
@@ -13,5 +13,10 @@ export class MenusController {
     @Get('ingest')
     async ingestMenus() {
         return this.menusService.ingestWeekMenus();
+    }
+
+    @Get()
+    async fetchMenusFromDB() {
+        return this.menusService.fetchMenusFromDB();
     }
 }
