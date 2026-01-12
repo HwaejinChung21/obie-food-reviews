@@ -60,7 +60,8 @@ export class MenusService {
             const items = await this.fetchMenus(new Date(), meal);
 
             const itemsByDate: Record<string, any[]> = {};
-        
+            
+            // Group items by date
             for (const item of items) {
                 const date = item.date.split('T')[0];
 
@@ -172,7 +173,16 @@ export class MenusService {
             throw error;
         }
 
-        return this.groupByStation(data.menu_items);
+        // change the return logic so the the endpoint returns a complete, structured menu
+        return {
+            snapshot: {
+                id: data.id,
+                diningHall: data.dining_hall,
+                meal: data.meal,
+                servedDate: data.served_date,
+            },
+            stations: this.groupByStation(data.menu_items ?? []),
+        };
     }
 
 }
