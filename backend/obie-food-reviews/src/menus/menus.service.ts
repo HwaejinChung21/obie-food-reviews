@@ -94,6 +94,7 @@ export class MenusService {
                     // return the row that now exists
                     .select()
                     .single();
+                console.log('SNAPSHOT:', { meal, servedDate, snapshotId: snapshot.id });
 
                 if (snapshotError) {
                     throw snapshotError;
