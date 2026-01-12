@@ -124,6 +124,30 @@ export class MenusService {
         return { status: 'ingested' };
     }
 
+    private groupByStation(items: any[]) {
+        const map = new Map<string, any[]>();
+
+        for (const item of items) {
+            const station_name = item.station_name || 'Other';
+
+            if (!map.has(station_name)) {
+                map.set(station_name, []);
+            }
+            map.get(station_name)!.push({
+                id: item.id,
+                name: item.name,
+                aviItemId: item.avi_item_id,
+            });
+        }
+
+        return Array.from(map.entries()).map(
+            ([stationName, items]) => ({
+                name: stationName,
+                items,
+            })
+        );
+    }
+
     async fetchMenusFromDB({ diningHall, meal, servedDate }: { diningHall: string; meal: string; servedDate: string }) {
         const { data, error } = await supabase
             .from('menu_snapshots')
@@ -148,7 +172,7 @@ export class MenusService {
             throw error;
         }
 
-        return data;
+        return this.groupByStation(data.menu_items);
     }
 
 }
