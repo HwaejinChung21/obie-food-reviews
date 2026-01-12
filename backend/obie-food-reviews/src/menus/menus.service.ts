@@ -47,7 +47,6 @@ export class MenusService {
 
         const data = await response.json();
         const raw = JSON.stringify(data);
-        const hash = require('crypto').createHash('sha256').update(raw).digest('hex');
         return data;
         
     }
@@ -107,6 +106,7 @@ export class MenusService {
                     snapshot_id: snapshot.id,
                     name: item.name,
                     avi_item_id: String(item.id),
+                    station_name: item.stationName ?? null
                 }));
 
                 // insert menu items
@@ -124,10 +124,25 @@ export class MenusService {
         return { status: 'ingested' };
     }
 
-    async fetchMenusFromDB() {
+    async fetchMenusFromDB({ diningHall, meal, servedDate }: { diningHall: string; meal: string; servedDate: string }) {
         const { data, error } = await supabase
             .from('menu_items')
-            .select('*');
+            .select(`
+                id,
+                dining_hall,
+                meal,
+                served_date,
+                menu_items (
+                    id,
+                    name,
+                    avi_item_id,
+                    station_name
+                )
+            `)
+            .eq('dining_hall', diningHall)
+            .eq('meal', meal)
+            .eq('served_date', servedDate)
+            .single();
 
         if (error) {
             throw error;
