@@ -56,7 +56,17 @@ export class MenusService {
         const diningHall = "Stevenson";
         
         for (const meal of meals) {
+            const mealId = this.getMealId(meal);
+            console.log('INGEST MEAL:', meal, 'mealId:', mealId);
+
             const items = await this.fetchMenus(new Date(), meal);
+
+            console.log('INGEST COUNT:', meal, Array.isArray(items) ? items.length : typeof items);
+
+            // OPTIONAL: log first 3 item names to see if they differ
+            if (Array.isArray(items)) {
+                console.log('SAMPLE:', meal, items.slice(0, 3).map((x) => x.name));
+            }
             const itemsByDate: Record<string, any[]> = {};
         
             for (const item of items) {
