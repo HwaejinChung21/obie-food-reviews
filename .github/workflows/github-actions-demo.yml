@@ -1,0 +1,17 @@
+name: Daily menu ingest
+
+on:
+  schedule:
+    - cron: '0 10 * * *'   # runs daily at 10:00 UTC
+  workflow_dispatch: {}   # allows manual run
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call ingest endpoint
+        env:
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+        run: |
+          curl -X POST https://obie-food-reviews.onrender.com/menus/ingest \
+            -H "Authorization: Bearer $INGEST_SECRET"
