@@ -46,6 +46,9 @@ export class MenusService {
         }
 
         const data = await response.json();
+        const raw = JSON.stringify(data);
+        const hash = require('crypto').createHash('sha256').update(raw).digest('hex');
+        console.log('AVI HASH:', { meal, hash, count: Array.isArray(data) ? data.length : null });
         return data;
         
     }
