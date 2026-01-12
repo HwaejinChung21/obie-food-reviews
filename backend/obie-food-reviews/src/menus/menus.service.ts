@@ -79,11 +79,14 @@ export class MenusService {
                     // upserting is used to avoid duplicate entries.
                     // insert the row if it doesn't exist
                     // update if it already exists
-                    .upsert({
-                        dining_hall: diningHall,
-                        meal: meal,
-                        served_date: servedDate,
-                    })
+                    .upsert(
+                        {
+                            dining_hall: diningHall,
+                            meal: meal,
+                            served_date: servedDate,
+                        },
+                        { onConflict: 'dining_hall,meal,served_date' }
+                    )
                     // return the row that now exists
                     .select()
                     .single();
