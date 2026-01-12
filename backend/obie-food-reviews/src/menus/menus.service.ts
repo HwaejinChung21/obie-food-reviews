@@ -126,7 +126,7 @@ export class MenusService {
 
     async fetchMenusFromDB({ diningHall, meal, servedDate }: { diningHall: string; meal: string; servedDate: string }) {
         const { data, error } = await supabase
-            .from('menu_items')
+            .from('menu_snapshots')
             .select(`
                 id,
                 dining_hall,
