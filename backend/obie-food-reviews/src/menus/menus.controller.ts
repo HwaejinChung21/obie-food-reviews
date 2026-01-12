@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query, Req, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Post, Query, Req, UnauthorizedException } from '@nestjs/common';
 import type { Request } from 'express';
 import { MenusService } from './menus.service';
 
@@ -25,7 +25,7 @@ export class MenusController {
         @Query('date') date: string,
     ) {
         if (!hall || !meal || !date) {
-            throw new Error('Missing query parameters: hall, meal, date are required');
+            throw new BadRequestException('Missing query parameters: hall, meal, date are required');
         }
 
         return this.menusService.fetchMenusFromDB({diningHall: hall, meal, servedDate: date});
