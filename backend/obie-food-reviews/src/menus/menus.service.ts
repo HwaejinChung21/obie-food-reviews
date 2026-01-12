@@ -81,6 +81,7 @@ export class MenusService {
 
             // loop through each date group and upsert into the database
             for (const [servedDate, dayItems] of Object.entries(itemsByDate)) {
+                console.log('ABOUT TO UPSERT SNAPSHOT:', { meal, servedDate });
                 const { data: snapshot, error: snapshotError } = await supabase
                 .from('menu_snapshots')
                     // upserting is used to avoid duplicate entries.
