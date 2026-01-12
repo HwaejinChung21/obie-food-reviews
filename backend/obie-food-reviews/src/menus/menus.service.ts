@@ -38,7 +38,7 @@ export class MenusService {
             throw new Error('Missing AVI_BASE_URL or AVI_LOCATION_ID_STEVENSON');
         }
 
-        const url = `${base}/api/v2/locations/${locationId}/menus/items?mealId=${mealId}&servedDate=${encodeURIComponent(aviDate)}`;
+        const url = `${base}/api/menu-items/week?date=${encodeURIComponent(aviDate)}&locationId=${encodeURIComponent(locationId)}&mealId=${encodeURIComponent(String(mealId))}`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -114,7 +114,7 @@ export class MenusService {
 
             }
         }
-        
+
         return { status: 'ingested' };
     }
 
