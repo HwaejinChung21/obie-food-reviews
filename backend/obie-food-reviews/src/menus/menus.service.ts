@@ -54,6 +54,8 @@ export class MenusService {
     }
 
     async ingestWeekMenus() {
+        console.log('SENTINEL ingestWeekMenus running at', new Date().toISOString());
+
 
         const meals: Meal[] = ['breakfast', 'lunch', 'dinner'];
         const diningHall = "Stevenson";
