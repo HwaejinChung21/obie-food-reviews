@@ -6,11 +6,6 @@ import { MenusService } from './menus.service';
 export class MenusController {
     constructor(private readonly menusService: MenusService) {}
 
-    @Get('avi')
-    getMenus() {
-        return this.menusService.fetchMenus();
-    }
-
     @Post('ingest')
     async ingestMenus(@Req() req: Request) {
         const auth = req.headers.authorization ?? '';
