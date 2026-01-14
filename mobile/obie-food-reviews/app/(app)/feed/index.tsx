@@ -1,7 +1,8 @@
-import { View, Text, FlatList, ActivityIndicator, SectionList } from 'react-native'
+import { View, Text, FlatList, ActivityIndicator, SectionList, Button } from 'react-native'
 import { useState, useEffect } from 'react'
 import React from 'react'
 import { API_BASE_URL } from '../../../config/api';
+import { supabase } from '@/lib/supabase.client';
 
 const Index = () => {
 
@@ -15,7 +16,7 @@ const Index = () => {
                 setLoading(true);
                 setError(null);
 
-                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=2026-01-12`);
+                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=2026-01-14`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -54,7 +55,7 @@ const Index = () => {
 
      
     return (
-        <View>
+        <View className="flex-1">
             <Text>Feed Screen</Text>
             <SectionList
                 sections={sections}
@@ -70,6 +71,12 @@ const Index = () => {
                 )}
             
             />
+            <View className="m-12">
+                <Button 
+                    title="Sign Out" 
+                    onPress={() => supabase.auth.signOut()} 
+                />
+            </View>
         </View>
   )
 }
