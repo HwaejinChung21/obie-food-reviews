@@ -6,6 +6,7 @@ type Meal = 'breakfast' | 'lunch' | 'dinner';
 @Injectable()
 export class MenusService {
 
+    // Get meal ID from environment variable mapping
     private getMealId(meal: Meal): number {
         const raw = process.env.AVI_MEAL_IDS;
         if (!raw) throw new Error('Missing AVI_MEAL_IDS');
@@ -20,6 +21,7 @@ export class MenusService {
         return id;
     }
 
+    // Format date as M/D/YYYY for AVI API
     private formatAviDate(d: Date) {
         const month = d.getMonth() + 1; // 0-based
         const day = d.getDate();
@@ -27,7 +29,7 @@ export class MenusService {
         return `${month}/${day}/${year}`; // e.g. "1/11/2026"
     }
 
-
+    // Fetch menus from AVI API
     async fetchMenus(date = new Date(), meal: Meal) {
         const aviDate = this.formatAviDate(date);
         const mealId = this.getMealId(meal);

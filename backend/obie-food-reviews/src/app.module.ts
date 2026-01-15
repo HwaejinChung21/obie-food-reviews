@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthController } from './health.controller';
 import { MenusModule } from './menus/menus.module';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
-  imports: [MenusModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true}), MenusModule],
   controllers: [AppController, HealthController],
   providers: [AppService],
 })
