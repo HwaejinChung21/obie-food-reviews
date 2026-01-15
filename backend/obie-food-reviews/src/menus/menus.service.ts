@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { supabase } from 'src/lib/supabase.client';
+import { supabase } from 'src/lib/supabase.admin';
 
 type Meal = 'breakfast' | 'lunch' | 'dinner';
 
