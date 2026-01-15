@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { supabase } from 'src/lib/supabase.admin';
+import { supabaseAdmin } from 'src/lib/supabase.admin';
+
 
 type Meal = 'breakfast' | 'lunch' | 'dinner';
 
@@ -76,7 +77,7 @@ export class MenusService {
 
             // loop through each date group and upsert into the database
             for (const [servedDate, dayItems] of Object.entries(itemsByDate)) {
-                const { data: snapshot, error: snapshotError } = await supabase
+                const { data: snapshot, error: snapshotError } = await supabaseAdmin
                 .from('menu_snapshots')
                     // upserting is used to avoid duplicate entries.
                     // insert the row if it doesn't exist
@@ -99,7 +100,7 @@ export class MenusService {
 
                 // delete old items for this snapshot
                 // re-running ingest doesn't duplicate items
-                await supabase
+                await supabaseAdmin
                     .from('menu_items')
                     .delete()
                     .eq('snapshot_id', snapshot.id);
@@ -113,7 +114,7 @@ export class MenusService {
                 }));
 
                 // insert menu items
-                const { error: insertError } = await supabase
+                const { error: insertError } = await supabaseAdmin
                     .from('menu_items')
                     .insert(menuItems);
 
@@ -152,7 +153,7 @@ export class MenusService {
     }
 
     async fetchMenusFromDB({ diningHall, meal, servedDate }: { diningHall: string; meal: string; servedDate: string }) {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseAdmin
             .from('menu_snapshots')
             .select(`
                 id,
