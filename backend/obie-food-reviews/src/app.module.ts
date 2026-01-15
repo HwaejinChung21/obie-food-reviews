@@ -5,12 +5,13 @@ import { HealthController } from './health.controller';
 import { MenusModule } from './menus/menus.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthController } from './auth/auth.controller';
-import { ProfilesController } from './profiles/profiles.controller';
+import { ProfilesModule } from './profiles/profiles.module';
+
 
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true}), MenusModule],
-  controllers: [AppController, HealthController, AuthController, ProfilesController],
+  imports: [ConfigModule.forRoot({ isGlobal: true}), MenusModule, ProfilesModule],
+  controllers: [AppController, HealthController, AuthController],
   providers: [AppService],
 })
 export class AppModule {}
