@@ -15,7 +15,10 @@ export class ProfilesController {
         const email = user.email;
 
         const profile = await this.profilesService.getOrCreateProfile({ id, email });
-        return { auth: user, profile };
+        return {
+            "auth": { id, email},
+            "profile": profile
+        }
     }
     
 }
