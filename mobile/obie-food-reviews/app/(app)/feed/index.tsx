@@ -1,4 +1,4 @@
-import { View, Text, FlatList, ActivityIndicator, SectionList, Button } from 'react-native'
+import { View, Text, ActivityIndicator, SectionList, Button } from 'react-native'
 import { useState, useEffect } from 'react'
 import React from 'react'
 import { API_BASE_URL } from '../../../config/api';

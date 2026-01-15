@@ -48,8 +48,6 @@ export default function Login() {
         Alert.alert(error.message)
       }
 
-
-
       if (!session) {
         Alert.alert('Please check your email for the confirmation link!') 
       } 

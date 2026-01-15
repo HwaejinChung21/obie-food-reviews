@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Stack } from "expo-router";
+import { Stack, Redirect } from "expo-router";
 import { supabase } from "@/lib/supabase.client";
 import { View, ActivityIndicator } from "react-native";
 import "./global.css"
-import { Redirect } from "expo-router";
 
 export default function RootLayout() {
   const [checked, setChecked] = useState(false);
@@ -12,14 +11,24 @@ export default function RootLayout() {
   useEffect(() => {
     // Check session once
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setHasSession(!!session);
+      if (session) {
+        setHasSession(true);
+      } else {
+        setHasSession(false);
+      }
+
       setChecked(true);
     });
 
     // Listen for changes
-    const { data } = supabase.auth.onAuthStateChange(( event, session) => {
-      setHasSession(!!session);
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setHasSession(true);
+      } else {
+        setHasSession(false);
+      }
       setChecked(true);
+      
     });
 
     return () => data.subscription.unsubscribe();
