@@ -14,8 +14,8 @@ export class ProfilesController {
         const id = user.id;
         const email = user.email;
 
-        console.log('Fetching profile for user:', id, email);
-        return { id, email };
+        const profile = await this.profilesService.getOrCreateProfile({ id, email });
+        return { auth: user, profile };
     }
     
 }
