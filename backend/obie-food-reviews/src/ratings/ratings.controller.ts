@@ -9,7 +9,7 @@ export class RatingsController {
 
     @UseGuards(SupabaseAuthGuard)
     @Put('/ratings')
-    async createOrUpdateRating(@Req() request: Request, @Body() body: any) {
+    async createOrUpdateRating(@Body() body: any) {
         
         const menuItemId: string = body?.menu_item_id;
         const rating: number = body?.rating;
@@ -50,13 +50,7 @@ export class RatingsController {
             }
         }
 
-        return {
-            ok: true,
-            userId: (request as any).user.id,
-            menuItemId,
-            rating,
-            description
-        }
+        return { menuItemId, rating, description };
     }
 
     @UseGuards(SupabaseAuthGuard)
