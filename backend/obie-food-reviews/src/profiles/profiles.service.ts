@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { supabaseAdmin } from 'src/lib/supabase.admin';
 
 @Injectable()
@@ -52,5 +52,28 @@ export class ProfilesService {
         }
 
         return profile;
+    }
+
+    async updateProfileDisplayName(id: string, display_name: string) {
+        const { data: updatedProfile, error} = await supabaseAdmin
+            .from('profiles')
+            .update({ display_name })
+            .eq('id', id)
+            .select('id, display_name, created_at, updated_at')
+            .single();
+            
+        if (!error && updatedProfile) {
+            return updatedProfile;
+        }
+
+        if (error?.code === '23505') {
+            throw new ConflictException('Display name already taken');
+        }
+
+        if (error?.code === '23514') {
+            throw new BadRequestException('Invalid display name');
+        }
+
+        throw new InternalServerErrorException('Failed to update profile');
     }
 }
