@@ -11,12 +11,12 @@ export class RatingsController {
     @Put('/ratings')
     async createOrUpdateRating(@Body() body: any) {
         
-        const menuItemId: string = body?.menu_item_id;
+        const menuItemId: string = body?.menu_item_id ?? body?.menuItemId;
         const rating: number = body?.rating;
         let description = body?.description;
 
-        if (typeof menuItemId !== 'string') {
-            throw new BadRequestException('menu_item_id must be a non-empty string');
+        if (typeof menuItemId !== 'string' || menuItemId.trim().length === 0) {
+            throw new BadRequestException('menuItemId must be a non-empty string');
         }
 
         const uuidV4ish = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
