@@ -12,6 +12,7 @@ export default function RootLayout() {
     // Check session once
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
+        console.log(session.access_token)
         setHasSession(true);
       } else {
         setHasSession(false);
@@ -28,7 +29,7 @@ export default function RootLayout() {
         setHasSession(false);
       }
       setChecked(true);
-      
+
     });
 
     return () => data.subscription.unsubscribe();
@@ -41,6 +42,7 @@ export default function RootLayout() {
       </View>
     );
   }
+  
 
   return (
       <>

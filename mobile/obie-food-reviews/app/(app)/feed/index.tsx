@@ -16,7 +16,10 @@ const Index = () => {
                 setLoading(true);
                 setError(null);
 
-                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=2026-01-14`);
+                const date = new Date();
+                const localDate = date.toLocaleDateString('sv-SE');
+                
+                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=${localDate}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -52,7 +55,6 @@ const Index = () => {
         title: s.name,
         data: s.items,
     }));
-
      
     return (
         <View className="flex-1">
