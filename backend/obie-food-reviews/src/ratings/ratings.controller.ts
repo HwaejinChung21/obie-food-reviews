@@ -9,9 +9,9 @@ export class RatingsController {
 
     @UseGuards(SupabaseAuthGuard)
     @Put('/ratings')
-    async createOrUpdateRating(@Body() body: any) {
+    async createOrUpdateRating(@Req() request: Request, @Body() body: any) {
         
-        const menuItemId: string = body?.menu_item_id ?? body?.menuItemId;
+        const menuItemId: string = body?.menuItemId;
         const rating: number = body?.rating;
         let description = body?.description;
 
@@ -19,9 +19,10 @@ export class RatingsController {
             throw new BadRequestException('menuItemId must be a non-empty string');
         }
 
-        const uuidV4ish = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        const uuidFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-        if (!uuidV4ish.test(menuItemId)) {
+
+        if (!uuidFormat.test(menuItemId)) {
             throw new BadRequestException('menuItemId must be a UUID');
         }
 
@@ -50,14 +51,24 @@ export class RatingsController {
             }
         }
 
-        return { menuItemId, rating, description };
+        const userId = (request as any).user.id;
+
+        return this.ratingsService.upsertRating({
+            userId,
+            menuItemId,
+            rating,
+            description
+        });
     }
 
     @UseGuards(SupabaseAuthGuard)
     @Delete('/ratings/:menuItemId')
     @HttpCode(204)
-    async deleteRating(@Param('menuItemId') menuItemId: string) {
-        return  
+    async deleteRating(@Req() request: Request, @Param('menuItemId') menuItemId: string,) {
+
+        const userId = (request as any).user.id;
+
+        return this.ratingsService.deleteRating(userId, menuItemId);
     }
     
 }
