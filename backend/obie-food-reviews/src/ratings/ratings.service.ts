@@ -21,7 +21,9 @@ export class RatingsService {
             .single();
 
         if (error?.code === '23514' || error?.code == '23503') {
+            console.error('upsertRating constraint error:', error.code, error.message);
             throw new BadRequestException('Failed to upsert rating');
+            
         }
 
         if (error) {
