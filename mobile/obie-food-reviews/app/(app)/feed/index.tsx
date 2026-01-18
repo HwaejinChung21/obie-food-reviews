@@ -19,7 +19,7 @@ const Index = () => {
                 const date = new Date();
                 const localDate = date.toLocaleDateString('sv-SE');
                 
-                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=${localDate}`);
+                const response = await fetch(`${API_BASE_URL}?hall=Stevenson&meal=dinner&date=1-12-2026`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
