@@ -25,6 +25,7 @@ export class RatingsService {
         }
 
         if (error) {
+            console.error('upsertRating supabase error:', error);
             throw new InternalServerErrorException('Failed to upsert rating');
         }
 
