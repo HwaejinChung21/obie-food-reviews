@@ -6,7 +6,7 @@ export class ReviewsService {
     async fetchReviews() {
         const { data, error } = await supabaseAdmin
             .from('ratings')
-            .select('*')
+            .select('*, profiles(display_name), menu_items(name, menu_snapshots(dining_hall, meal, served_date))')
             .order('updated_at', { ascending: false })
             .limit(10);
 
@@ -14,6 +14,20 @@ export class ReviewsService {
             throw new InternalServerErrorException('Failed to fetch reviews');
         }
 
-        return data;
+        return data.map(row => {
+            const mealRaw = row.menu_items.menu_snapshots.meal;
+            const meal = typeof mealRaw === 'string' ? mealRaw.charAt(0).toUpperCase() + mealRaw.slice(1).toLowerCase() : null;
+            
+            return {
+                displayName: row.profiles.display_name,
+                menuItemName: row.menu_items.name,
+                diningHall: row.menu_items.menu_snapshots.dining_hall,
+                meal: meal,
+                servedDate: row.menu_items.menu_snapshots.served_date,
+                rating: row.rating,
+                description: row.description,
+                reviewUpdatedAt: row.updated_at,
+            }
+        });
     }
 }
