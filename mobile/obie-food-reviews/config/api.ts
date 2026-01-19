@@ -1,1 +1,1 @@
-export const API_BASE_URL='https://obie-food-reviews.onrender.com/menus'
+export const API_BASE_URL='https://obie-food-reviews.onrender.com'

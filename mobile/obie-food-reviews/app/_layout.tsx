@@ -57,7 +57,7 @@ export default function RootLayout() {
           <Redirect href="/(auth)/login" />
         ) : (
           // Only redirect to feed if we are at the very root index
-          <Redirect href="/(app)/feed" />
+          <Redirect href="/(app)/(tabs)/feed" />
         )}
       </>
   );
