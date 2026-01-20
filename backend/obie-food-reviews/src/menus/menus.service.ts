@@ -61,6 +61,7 @@ export class MenusService {
         for (const meal of meals) {
             const mealId = this.getMealId(meal);
             const items = await this.fetchMenus(new Date(), meal);
+            console.log(`Fetched ${items?.length} items for ${meal}`);
 
             const itemsByDate: Record<string, any[]> = {};
             
