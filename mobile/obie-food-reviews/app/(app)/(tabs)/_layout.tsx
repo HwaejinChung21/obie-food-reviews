@@ -1,6 +1,7 @@
 import { Tabs, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text, Pressable } from 'react-native';
+import { Image } from 'react-native';
 
 export default function TabLayout() {
     const capitalizeFirst = (str: string) => {
@@ -13,19 +14,37 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{ 
                 headerShown: true,
-                header: ({ route, options }) => {
-                    const title = options.headerTitle === 'string'
-                        ? options.headerTitle
-                        : capitalizeFirst(route.name);
+                header: ({ route }) => {
+                    const isFeed = route.name === "feed";
+
                     return (
-                        <View className="flex-row items-end justify-between px-6 pt-12 pb-2 border-b border-gray-300 bg-white" style={{height: 120}}>
-                            <Text className="text-black font-bold text-3xl">{title}</Text>
-                            {route.name === "feed" && (
+                        <View className="flex-row items-end justify-between px-6 pb-3 border-b border-gray-300 bg-white" style={{height: 120}}>
+                            <View style={{ width: 30 }} />
+                            {isFeed ? (
+                                <View className="flex-1 justify-center items-center">
+                                    <Image
+                                        source={require('../../../assets/images/obie-food-reviews-maroon-on-white-transparent.png')}
+                                        style={{ width: 150, height: 50 }}
+                                        resizeMode="contain"
+                                    />
+                                </View>
+                            ) : (
+                                <View className="flex-1 justify-center items-center">
+                                    <Text className="text-black font-bold text-2xl">{capitalizeFirst(route.name)}</Text>
+                                </View>                        
+                            )}
+                            {isFeed ? (
                                 <Pressable
                                     onPress={() => router.push("/add-review")}
                                 >
-                                    <Ionicons name="add-circle" size={30} color="#A6192E" />
+                                      {({ pressed }) => (
+                                        
+                                        <Ionicons name="add-circle" size={30} color="#A6192E" style={{ opacity: pressed ? 0.5 : 1 }} />
+                                        
+                                        )}
                                 </Pressable>
+                            ): (
+                                <View style={{ width: 30 }} />
                             )}
                         </View>
                     )

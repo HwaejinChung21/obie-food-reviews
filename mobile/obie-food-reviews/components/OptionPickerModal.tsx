@@ -16,8 +16,11 @@ export default function OptionPickerModal(props: {
 
     return (
         <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-            <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
-                <Pressable className="bg-white rounded-t-2xl p-4" onPress={() => {}}>
+            <Pressable className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }} onPress={onClose}>
+                <Pressable 
+                    className="bg-white rounded-t-2xl p-4" 
+                    style={{ maxHeight: '60%' }} 
+                    onPress={() => {}}>
                 <Text className="text-lg font-semibold text-gray-900 mb-3">{title}</Text>
 
                 {options.map((option) => {

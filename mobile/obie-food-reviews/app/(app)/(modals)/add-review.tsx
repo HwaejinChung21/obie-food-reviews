@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase.client';
 import OptionPickerModal from '@/components/OptionPickerModal';
 import OptionPicker from '@/components/OptionPicker';
 import MenuItemPickerModal from '@/components/MenuItemPickerModal';
+import { useRouter } from 'expo-router';
 
 type Meal = "breakfast" | "lunch" | "dinner";
 
@@ -83,6 +84,7 @@ async function submitReview(params: {
 }
 
 export default function AddReview() {
+	const router = useRouter();
     const [hall, setHall] = useState<string>('');
     const [meal, setMeal] = useState<Meal | null>(null);
     const [servedDate, setServedDate] = useState<string | null>(null);
@@ -209,11 +211,11 @@ export default function AddReview() {
 							className="border border-gray-300 rounded-lg p-3 mb-3 text-base"
 							placeholderTextColor="#9CA3AF"
 							textAlignVertical="top"
-							style={{ height: 120 }}
+							style={{ height: 150 }}
 						/>
 				</View>
 			</TouchableWithoutFeedback>
-			<View className="px-4 py-4 pb-12 bg-white">
+			<View className="flex-1 justify-end px-4 py-4 pb-12 bg-white">
 				<Pressable 
 					disabled={!canPressSubmit}
 					onPress={async () => {
@@ -224,10 +226,14 @@ export default function AddReview() {
 							setPosting(true);
 
 							await submitReview({
-							menuItemId: menuItemId,
-							rating: rating,
-							description: description
-						})
+								menuItemId: menuItemId,
+								rating: rating,
+								description: description
+							})
+						
+							Alert.alert("Success", "Your review has been submitted")
+							router.back();
+						
 						} catch (error: any) {
 							Alert.alert("Failed to submit review", error?.message ?? "Please try again");
 						} finally {

@@ -47,7 +47,7 @@ return (
             onPress={Keyboard.dismiss}
             disabled={Platform.OS === 'web'}
         >
-            <View className="flex-1 justify-center align-items-center">
+            <View className="flex-1 align-items-center">
 
                 {/* Back Button */}
                 <Pressable 
@@ -57,7 +57,7 @@ return (
                     <Ionicons name="arrow-back" size={28} color="#fff" />
                 </Pressable>
 
-                <Text className="flex self-center text-white text-4xl font-bold mb-4">Create Account</Text>
+                <Text className="flex self-center text-white text-3xl font-bold mt-4 mb-14">Create Account</Text>
 
                 <View className="bg-white rounded-xl mt-4 mb-4 p-4 w-5/6 self-center">
                     {/* Email Input */}
@@ -115,7 +115,10 @@ return (
                     </View>
                 </View>
 
-                <View className="mt-4 mb-6">
+                {/* Spacer to push button to bottom */}
+                <View className="flex-1" />
+
+                <View className="w-full px-8 mb-6">
                     <Pressable 
                     disabled={loading} 
                     onPress={() => {
@@ -125,9 +128,15 @@ return (
                         }
                         signUpWithEmail();
                     }}
-                    className="bg-[#fff7e4] w-5/6 pt-2 pb-2 self-center rounded-xl"
+                    className="bg-[#fff7e4] w-full pt-2 pb-2 rounded-xl"
                     >
-                        <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">Sign up with ObieID</Text>
+                    {({ pressed }) => (
+                        <View
+                        className={`bg-[#fff7e4] rounded-xl ${pressed || loading ? "opacity-50" : "opacity-100"}`}
+                        >
+                            <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">Sign up with ObieID</Text>
+                        </View>
+                    )}
                     </Pressable>
                 </View>
                 

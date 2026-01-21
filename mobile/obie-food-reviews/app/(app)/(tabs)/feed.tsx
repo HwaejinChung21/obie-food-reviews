@@ -1,38 +1,70 @@
-import { View, Text, ActivityIndicator, FlatList, Button } from 'react-native'
-import { useState, useEffect } from 'react'
+import { View, Text, ActivityIndicator, FlatList, RefreshControl } from 'react-native'
+import { useState, useEffect, useCallback } from 'react'
 import React from 'react'
 import { API_BASE_URL } from '../../../config/api';
 import ReviewCard from '../../../components/ReviewCard';
+import { useFocusEffect } from 'expo-router'
 
 export default function Feed() {
 
     const [reviews, setReviews ] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                const response = await fetch(`${API_BASE_URL}/reviews`);
 
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(`${response.status} ${response.statusText}: ${text}`);
-                }
+    const fetchReviews = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const response = await fetch(`${API_BASE_URL}/reviews`);
 
-                const data = await response.json();
-                setReviews(data);
-            } catch (err: any) {
-                setError(err?.message ?? 'Unknown error');
-            } finally {
-                setLoading(false);
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`${response.status} ${response.statusText}: ${text}`);
             }
+
+            const data = await response.json();
+            setReviews(data);
+        } catch (err: any) {
+            setError(err?.message ?? 'Unknown error');
+        } finally {
+            setLoading(false);
         }
-        fetchReviews();
-    }, [])
+    }
+
+    useEffect(() => {
+        const loadInitial = async () => {
+            setLoading(true);
+            await fetchReviews();
+            setLoading(false);
+        }
+        loadInitial();
+    }, []);
+
+        // Refresh when screen comes into focus
+    useFocusEffect(
+        useCallback(() => {
+            fetchReviews();
+        }, [])
+    );
+
+    // Pull to refresh handler
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchReviews();
+        setRefreshing(false);
+    }
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" color="#A6192E" />
+            </View>
+        );
+    }
+    
 
     if (loading) {
         return (
@@ -66,8 +98,16 @@ export default function Feed() {
                             description={item.description}
                         />
                     )}
-                    ItemSeparatorComponent={() => <View className="h-3" />}
+                    
                     showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={['#A6192E']}
+                            tintColor="#A6192E"
+                            />
+                    }
                     />
             </View>
         </View>

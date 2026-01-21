@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Pressable, View, Text, ActivityIndicator, SectionList, } from "react-native";
+import { Modal, Pressable, View, Text, ActivityIndicator, SectionList, ScrollView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 type Station = { name: string; items: { id: string; name: string }[] };
@@ -23,11 +23,15 @@ export default function MenuItemPickerModal(props: {
         >
             {/* dark area that closes the modal when you tap it */}
             <Pressable
-                className="flex-1 justify-end bg-black/40"
+                className="flex-1 justify-end"
+                style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
                 onPress={onClose}
             >
                 {/* white sheet area, a pressable to stop outer press from firing*/}
-                <Pressable className="bg-white rounded-t-2xl p-4 max-h-[60%]" onPress={() => {}}>
+                <Pressable 
+                    className="bg-white rounded-t-2xl p-4" 
+                    style={{ maxHeight: '60%' }}
+                    onPress={() => {}}>
                     <Text className="text-lg font-semibold text-gray-900 mb-3">{title}</Text>
 
                     {loading ? (

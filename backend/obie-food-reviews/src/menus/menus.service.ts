@@ -31,7 +31,7 @@ export class MenusService {
     }
 
     // Fetch menus from AVI API
-    async fetchMenus(date = new Date(), meal: Meal) {
+    async fetchMenus(meal: Meal, date = new Date()) {
         const aviDate = this.formatAviDate(date);
         const mealId = this.getMealId(meal);
         const base = process.env.AVI_BASE_URL;
@@ -60,7 +60,7 @@ export class MenusService {
         
         for (const meal of meals) {
             const mealId = this.getMealId(meal);
-            const items = await this.fetchMenus(new Date(), meal);
+            const items = await this.fetchMenus(meal, new Date());
             console.log(`Fetched ${items?.length} items for ${meal}`);
 
             const itemsByDate: Record<string, any[]> = {};

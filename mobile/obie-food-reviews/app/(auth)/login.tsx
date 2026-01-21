@@ -82,7 +82,9 @@ export default function Login() {
           <View className="flex-row justify-center mb-6">
             <Text className="text-white">Don't have an account?</Text>
             <Pressable onPress={() => router.push('/(auth)/signup')}>
-              <Text className="text-[#fff7e4] font-medium underline"> Sign up</Text>
+              {({ pressed }) => (
+                <Text className="text-[#fff7e4] font-medium underline" style={pressed ? { opacity: 0.5 } : {}}> Sign up</Text>
+              )}
             </Pressable>
           </View>
           <View className="bg-white rounded-xl mb-4 p-4 w-5/6 self-center">
@@ -121,8 +123,13 @@ export default function Login() {
             </View>
           </View>
           <View className="mt-4 mb-4">
-            <Pressable className="flex-row justify-center">
-              <Text className="text-[#fff7e4] font-medium underline">Forgot Your Password?</Text>
+            <Pressable
+              onPress={() => router.push('/(auth)/reset-password')} 
+              className="flex-row justify-center"
+            >
+            {({ pressed }) => (
+              <Text className="text-[#fff7e4] font-medium underline" style={pressed ? { opacity: 0.5 } : {}}>Forgot Your Password?</Text>
+            )}
             </Pressable>
           </View>
           <View className="mt-4 mb-6">
@@ -131,7 +138,13 @@ export default function Login() {
               onPress={() => signInWithEmail()}
               className="bg-[#fff7e4] w-5/6 pt-2 pb-2 self-center rounded-xl"
             >
-              <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">Sign in with ObieID</Text>
+              {({ pressed }) => (
+                <View
+                  className={`bg-[#fff7e4] rounded-xl ${pressed || loading ? "opacity-50" : "opacity-100"}`}
+                >
+                  <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">Sign in with ObieID</Text>
+                </View>
+              )}
             </Pressable>
           </View>
         </View>
