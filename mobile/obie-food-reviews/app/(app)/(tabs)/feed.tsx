@@ -37,7 +37,7 @@ export default function Feed() {
     if (loading) {
         return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator />
+            <ActivityIndicator size="large" color="#A6192E" />
         </View>
         );
     }

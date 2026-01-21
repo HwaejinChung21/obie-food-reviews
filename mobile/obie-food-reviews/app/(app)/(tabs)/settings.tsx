@@ -10,7 +10,7 @@ const settings = () => {
                     onPress={() => supabase.auth.signOut()}
                     className="bg-[#A6192E] w-1/2 pt-2 pb-2 self-center rounded-xl"
                 >
-                    <Text className="text-[#fff7e4] text-center text-lg py-2 font-bold">Sign out</Text>
+                    <Text className="text-white text-center text-lg py-2 font-bold">Sign out</Text>
                 </Pressable>
             </View>
         </View>
