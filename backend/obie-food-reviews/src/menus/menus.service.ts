@@ -99,13 +99,6 @@ export class MenusService {
                     throw snapshotError;
                 }
 
-                // delete old items for this snapshot
-                // re-running ingest doesn't duplicate items
-                await supabaseAdmin
-                    .from('menu_items')
-                    .delete()
-                    .eq('snapshot_id', snapshot.id);
-
                 // prepare menu items for insertion
                 const menuItems = dayItems.map((item) => ({
                     snapshot_id: snapshot.id,
@@ -114,15 +107,12 @@ export class MenusService {
                     station_name: item.stationName ?? null
                 }));
 
-                // insert menu items
-                const { error: insertError } = await supabaseAdmin
+                //upsert menu items
+                const { error: upsertError } = await supabaseAdmin
                     .from('menu_items')
-                    .insert(menuItems);
+                    .upsert(menuItems, { onConflict: 'snapshot_id,avi_item_id' });
 
-                if (insertError) {
-                    throw insertError;
-                }
-
+                if (upsertError) throw upsertError;
             }
         }
 
