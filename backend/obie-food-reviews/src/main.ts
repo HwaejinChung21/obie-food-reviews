@@ -10,6 +10,7 @@ async function bootstrap() {
       'http://localhost:19006',
       'https://localhost:8081',
       'https://obie-food-reviews--yv1ivr399t.expo.app',
+      'https://obie-food-reviews--jlze1xry49.expo.app',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
