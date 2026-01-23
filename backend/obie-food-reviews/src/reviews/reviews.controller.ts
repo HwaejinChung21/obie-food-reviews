@@ -12,10 +12,10 @@ export class ReviewsController {
     }
 
     @Get('/my-reviews')
-    // @UseGuards(SupabaseAuthGuard)
+    @UseGuards(SupabaseAuthGuard)
     getMyReviews(@Req() req: any) {
         // Extract user ID from the authenticated request
-        const userId = "test-user-id"
+        const userId = req.user.id;
         return this.reviewsService.fetchMyReviews(userId);
     }
 }
