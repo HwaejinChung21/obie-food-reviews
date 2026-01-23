@@ -43,7 +43,7 @@ export default function Feed() {
         loadInitial();
     }, []);
 
-        // Refresh when screen comes into focus
+    // Refresh when screen comes into focus
     useFocusEffect(
         useCallback(() => {
             fetchReviews();
@@ -62,15 +62,6 @@ export default function Feed() {
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <ActivityIndicator size="large" color="#A6192E" />
             </View>
-        );
-    }
-    
-
-    if (loading) {
-        return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator size="large" color="#A6192E" />
-        </View>
         );
     }
 
@@ -96,6 +87,7 @@ export default function Feed() {
                             meal={item.meal}
                             rating={item.rating}
                             description={item.description}
+                            servedDate={item.servedDate}
                         />
                     )}
                     

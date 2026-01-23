@@ -1,5 +1,5 @@
 import { Redirect } from "expo-router";
 
 export default function Index() {
-  return <Redirect href="/(app)/feed" />;
+  return <Redirect href="/(app)/(tabs)/feed" />;
 }

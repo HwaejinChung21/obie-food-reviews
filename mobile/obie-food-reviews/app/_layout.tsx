@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Stack, Redirect } from "expo-router";
 import { supabase } from "@/lib/supabase.client";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StatusBar } from "react-native";
 import "./global.css"
 
 export default function RootLayout() {
@@ -45,6 +45,7 @@ export default function RootLayout() {
 
   return (
       <>
+        <StatusBar barStyle="dark-content" />
         <Stack screenOptions={{ headerShown: false }}>
           {/* We keep these defined so the routes exist */}
           <Stack.Screen name="(auth)" />

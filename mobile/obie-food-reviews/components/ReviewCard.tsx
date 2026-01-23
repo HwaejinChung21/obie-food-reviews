@@ -9,6 +9,12 @@ type ReviewCardProps = {
     meal: string;
     rating: number;
     description: string | null;
+    servedDate: string;
+}
+
+function formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 export default function ReviewCard({
@@ -17,7 +23,8 @@ export default function ReviewCard({
     menuItemName,
     meal,
     rating,
-    description
+    description,
+    servedDate
 }: ReviewCardProps) {
     return (
         <View className="bg-white p-4 mb-4" style={{ borderRadius: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 }}>
@@ -35,13 +42,14 @@ export default function ReviewCard({
             
             <View className="mb-4">
                 <Text style={{ fontSize: 12, color: '#6B7280'}}>{menuItemName} | {meal}</Text>
+                <Text style={{ fontSize: 12, color: '#6B7280'}}>Served on {formatDate(servedDate)}</Text>
             </View>
             
             <View>
                 {description ? (
-                    <Text style={{ fontSize: 15, color: '#000000'}}>{description}</Text>
+                    <Text style={{ fontSize: 14, color: '#000000'}}>{description}</Text>
                 ) : (
-                    <Text style={{ fontSize: 15, color: '#000000'}}>No description provided.</Text>
+                    <Text style={{ fontSize: 14, color: '#000000'}}>No description provided.</Text>
                 )}
             </View>
         </View>
