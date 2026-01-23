@@ -34,7 +34,7 @@ export class ReviewsService {
     async fetchMyReviews(requestedUserId: string) {
         const { data, error } = await supabaseAdmin
             .from('ratings')
-            .select('*, profiles(display_name), menu_items(name, menu_snapshots(dining_hall, meal, served_date))')
+            .select('*, id, profiles(display_name), menu_items(name, menu_snapshots(dining_hall, meal, served_date))')
             .eq('user_id', requestedUserId)
             .order('updated_at', { ascending: false })
 
