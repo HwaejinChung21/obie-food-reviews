@@ -12,7 +12,7 @@ async function bootstrap() {
       const allowed =
         origin === "http://localhost:19006" ||
         origin === "http://localhost:8081" ||
-        /^https:\/\/obie-food-reviews-.*\.expo\.app$/.test(origin);
+        /^https:\/\/obie-food-reviews\.expo\.app$/.test(origin);
 
       return allowed ? cb(null, true) : cb(new Error("Blocked by CORS"), false);
     },
