@@ -4,6 +4,18 @@ import { supabase } from "@/lib/supabase.client";
 import { View, ActivityIndicator, StatusBar } from "react-native";
 import "./global.css"
 
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+
+async function initializeProfile(accessToken: string) {
+  try {
+    await fetch(`${API_BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+  } catch (error) {
+    console.error('Failed to initialize profile:', error);
+  }
+}
+
 export default function RootLayout() {
   const [checked, setChecked] = useState(false);
   const [hasSession, setHasSession] = useState(false);
@@ -24,6 +36,8 @@ export default function RootLayout() {
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setHasSession(true);
+        // Initialize profile when user authenticates
+        initializeProfile(session.access_token);
       } else {
         setHasSession(false);
       }

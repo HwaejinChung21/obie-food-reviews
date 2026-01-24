@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, Alert } from 'react-native'
+import { View, Text, Pressable, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, Alert, Touchable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { API_BASE_URL } from '@/config/api';
 import { Ionicons } from '@expo/vector-icons';
@@ -199,7 +199,8 @@ export default function AddReview() {
 					))}
 				</View>
 			</View>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+			{Platform.OS === "web" ? (
 				<View className="px-4 py-4  bg-white">
 					<Text className="text-base font-medium text-gray-700 mb-3">Description (optional):</Text>
 						<TextInput
@@ -214,7 +215,25 @@ export default function AddReview() {
 							style={{ height: 150 }}
 						/>
 				</View>
-			</TouchableWithoutFeedback>
+			) : (
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+					<View className="px-4 py-4  bg-white">
+						<Text className="text-base font-medium text-gray-700 mb-3">Description (optional):</Text>
+							<TextInput
+								value={description}
+								onChangeText={setDescription}
+								placeholder="Share your thoughts..."
+								multiline
+								numberOfLines={4}
+								className="border border-gray-300 rounded-lg p-3 mb-3 text-base"
+								placeholderTextColor="#9CA3AF"
+								textAlignVertical="top"
+								style={{ height: 150 }}
+							/>
+					</View>
+				</TouchableWithoutFeedback>
+			)}
+
 			<View className="flex-1 justify-end px-4 py-4 pb-12 bg-white">
 				<Pressable 
 					disabled={!canPressSubmit}

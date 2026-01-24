@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "obie-food-reviews",
+    "name": "Obie Food Reviews",
     "slug": "obie-food-reviews",
-    "owner": "HChung21",
+    "owner": "hchung21",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -54,7 +54,10 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {}
+      "router": {},
+      "eas": {
+        "projectId": "c7096b89-1223-49b4-9aff-4401da4a3fd1"
+      }
     }
   }
 }
