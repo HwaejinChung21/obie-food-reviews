@@ -6,14 +6,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: [
-      'http://localhost:19006',
-      'https://localhost:8081',
-      'https://obie-food-reviews--yv1ivr399t.expo.app',
-      'https://obie-food-reviews--jlze1xry49.expo.app',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true); // mobile apps / curl / Postman
+
+      const allowed =
+        origin === "http://localhost:19006" ||
+        origin === "http://localhost:8081" ||
+        /^https:\/\/obie-food-reviews-.*\.expo\.app$/.test(origin);
+
+      return allowed ? cb(null, true) : cb(new Error("Blocked by CORS"), false);
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   });
 
   const port = process.env.PORT ? Number(process.env.PORT) : 3000;
