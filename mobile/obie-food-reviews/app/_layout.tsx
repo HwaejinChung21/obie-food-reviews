@@ -3,14 +3,21 @@ import { Stack, Redirect } from "expo-router";
 import { supabase } from "@/lib/supabase.client";
 import { View, ActivityIndicator, StatusBar } from "react-native";
 import "./global.css"
-
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+import { API_BASE_URL } from "@/config/api";
 
 async function initializeProfile(accessToken: string) {
   try {
-    await fetch(`${API_BASE_URL}/me`, {
+    if (!API_BASE_URL) {
+      console.error("API_BASE_URL is not set; cannot initialize profile.");
+      return;
+    }
+    const res = await fetch(`${API_BASE_URL}/me`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "<no body>");
+      console.warn(`Profile init failed: ${res.status} ${res.statusText} - ${text}`);
+    }
   } catch (error) {
     console.error('Failed to initialize profile:', error);
   }
@@ -25,6 +32,8 @@ export default function RootLayout() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setHasSession(true);
+        // Initialize profile for existing session
+        initializeProfile(session.access_token);
       } else {
         setHasSession(false);
       }
