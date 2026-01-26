@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,11 +19,37 @@ export default function UpdatePassword() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [ready, setReady] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setReady(true);
+      }
+    });
+
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setReady(true);
+      }
+    })();
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
 
   async function updatePassword() {
     if (!password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+      if (Platform.OS === 'web') {
+        window.alert("Error: Please fill in all fields");
+      } else {
+        Alert.alert("Error", "Please fill in all fields");
+      }
       return;
     }
 
@@ -34,14 +60,27 @@ export default function UpdatePassword() {
     setLoading(false);
 
     if (error) {
-      Alert.alert("Error", error.message);
+      if (Platform.OS === 'web') {
+        window.alert("Error: " + error.message);
+      } else {
+        Alert.alert("Error", error.message);
+      }
     } else {
-      Alert.alert("Success", "Your password has been updated.", [
-        {
-          text: "OK",
-          onPress: () => router.push("/(auth)/login"),
-        },
-      ]);
+      if (Platform.OS === 'web') {
+        window.alert("Success: Your password has been updated.");
+        await supabase.auth.signOut();
+        router.replace("/(auth)/login");
+      } else {
+        Alert.alert("Success", "Your password has been updated.", [
+          {
+            text: "OK",
+            onPress: () => async () => {
+                await supabase.auth.signOut();
+                router.replace("/(auth)/login");
+            }
+          },
+        ]);
+      }
     }
   }
 
@@ -91,15 +130,15 @@ export default function UpdatePassword() {
                         <Ionicons name="lock-closed-outline" size={24} color="#A6192E" />
                         <TextInput
                             placeholder="Confirm Password"
-                            secureTextEntry={!showPassword}
+                            secureTextEntry={!showConfirmPassword}
                             className="flex-1 ml-3 text-gray-900"
                             placeholderTextColor="#9CA3AF"
                             onChangeText={(text) => setConfirmPassword(text)}
                             value={confirmPassword}
                         />
-                        <Pressable onPress={() => setShowPassword(!showPassword)}>
+                        <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
                             <Ionicons
-                            name={showPassword ? "eye-outline" : "eye-off-outline"}
+                            name={showConfirmPassword ? "eye-outline" : "eye-off-outline"}
                             size={24}
                             color="#9CA3AF"
                             />
@@ -112,12 +151,29 @@ export default function UpdatePassword() {
 
                 <View className="w-full px-8 mb-6">
                     <Pressable
-                    disabled={loading}
+                    disabled={loading || !ready}
                     onPress={() => {
-                        if (password !== confirmPassword) {
-                        Alert.alert("Error", "Passwords do not match");
-                        return;
+                        if (!ready) {
+                            if (Platform.OS === "web") {
+                                window.alert("Please open the password reset link from your email.");
+                            } else {
+                                Alert.alert(
+                                "Not ready",
+                                "Please open the password reset link from your email."
+                                );
+                            }
+                            return;
                         }
+
+                        if (password !== confirmPassword) {
+                            if (Platform.OS === 'web') {
+                                window.alert("Error: Passwords do not match");
+                            } else {
+                                Alert.alert("Error", "Passwords do not match");
+                            }
+                            return;
+                        }
+
                         updatePassword();
                     }}
                     className="bg-[#fff7e4] w-full pt-2 pb-2 rounded-xl"

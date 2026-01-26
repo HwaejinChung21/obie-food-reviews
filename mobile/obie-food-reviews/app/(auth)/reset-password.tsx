@@ -12,26 +12,48 @@ export default function ResetPassword() {
     
     async function sendResetPasswordEmail() {
         if (!email.trim()) {
-            Alert.alert('Please enter your email address.');
+            if (Platform.OS === 'web') {
+                window.alert('Please enter your email address.');
+            } else {
+                Alert.alert('Please enter your email address.');
+            }
             return;
         }
 
         if (!email.endsWith('@oberlin.edu')) {
-            Alert.alert('Error', 'Please use your @oberlin.edu email address')
+            if (Platform.OS === 'web') {
+                window.alert('Error: Please use your @oberlin.edu email address')
+            } else {
+                Alert.alert('Error', 'Please use your @oberlin.edu email address')
+            }
     
             return
         }
 
         setLoading(true);
         
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+        const redirectUrl = Platform.OS === 'web' 
+            ? `${window.location.origin}/update-password`
+            : "https://obie-food-reviews.expo.app/update-password";
+        
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: redirectUrl
+        });
 
         setLoading(false);
 
         if (error) {
-            Alert.alert('Error', error.message);
+            if (Platform.OS === 'web') {
+                window.alert(`Error: ${error.message}`)
+            } else {
+                Alert.alert('Error', error.message)
+            }
         } else {
-            Alert.alert('Success', 'Please check your email for the password reset link.');
+            if (Platform.OS === 'web') {
+                window.alert('Success: Please check your email for the password reset link.')
+            } else {
+                Alert.alert('Success', 'Please check your email for the password reset link.')
+            }
             [
                 {
                     text: 'OK',

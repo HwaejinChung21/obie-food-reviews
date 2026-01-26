@@ -1,39 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Stack, Redirect } from "expo-router";
+import { Stack, Redirect, usePathname } from "expo-router";
 import { supabase } from "@/lib/supabase.client";
 import { View, ActivityIndicator, StatusBar } from "react-native";
-import "./global.css"
-import { API_BASE_URL } from "@/config/api";
 
-async function initializeProfile(accessToken: string) {
-  try {
-    if (!API_BASE_URL) {
-      console.error("API_BASE_URL is not set; cannot initialize profile.");
-      return;
-    }
-    const res = await fetch(`${API_BASE_URL}/me`, {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    if (!res.ok) {
-      const text = await res.text().catch(() => "<no body>");
-      console.warn(`Profile init failed: ${res.status} ${res.statusText} - ${text}`);
-    }
-  } catch (error) {
-    console.error('Failed to initialize profile:', error);
-  }
-}
+import "./global.css"
 
 export default function RootLayout() {
   const [checked, setChecked] = useState(false);
   const [hasSession, setHasSession] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check session once
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setHasSession(true);
-        // Initialize profile for existing session
-        initializeProfile(session.access_token);
       } else {
         setHasSession(false);
       }
@@ -45,8 +26,6 @@ export default function RootLayout() {
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setHasSession(true);
-        // Initialize profile when user authenticates
-        initializeProfile(session.access_token);
       } else {
         setHasSession(false);
       }
@@ -64,7 +43,20 @@ export default function RootLayout() {
       </View>
     );
   }
-  
+
+  // Allow update-password page regardless of auth state (for password reset flow)
+  const isUpdatePasswordRoute = pathname === "/update-password";
+  if (isUpdatePasswordRoute) {
+    return (
+      <>
+        <StatusBar barStyle="dark-content" />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(app)" />
+        </Stack>
+      </>
+    );
+  }
 
   return (
       <>

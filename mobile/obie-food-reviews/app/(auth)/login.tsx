@@ -19,49 +19,34 @@ export default function Login() {
       const { data, error } = await supabase.auth.signInWithPassword({ email: email, password: password })
 
       if (error) {
-        Alert.alert(error.message)
+        if (Platform.OS === 'web') {
+            window.alert(`Error: ${error.message}`)
+        } else {
+            Alert.alert('Error', error.message)
+        }
         return
       }
-
+        
       const userEmail = data.user?.email;
 
       if (!userEmail?.endsWith('@oberlin.edu')) {
-        Alert.alert('Please use your ObieID email to sign in.')
+        if (Platform.OS === 'web') {
+            window.alert('Please use your ObieID email to sign in.')
+        } else {
+            Alert.alert('Please use your ObieID email to sign in.')
+        }
         await supabase.auth.signOut()
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function signUpWithEmail() {
-    setLoading(true)
-
-    try {
-      if (!email.endsWith('@oberlin.edu')) {
-        Alert.alert('Error', 'Please use your @oberlin.edu email address')
-
         return
       }
-
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.signUp({ email: email, password: password })
-
-      if (error) {
-        Alert.alert(error.message)
-      }
-
-      if (!session) {
-        Alert.alert('Please check your email for the confirmation link!') 
-      } 
-
+      
+      // Successful login with valid Oberlin email - navigate to feed immediately
+      router.replace('/(app)/(tabs)/feed')
     } finally {
       setLoading(false)
     }
-
   }
+
+
 
   return (
     <KeyboardAvoidingView 

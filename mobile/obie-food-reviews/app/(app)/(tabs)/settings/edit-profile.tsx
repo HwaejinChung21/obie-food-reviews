@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, Alert, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { supabase } from "@/lib/supabase.client";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useNavigation } from "expo-router";
 import { API_BASE_URL } from '@/config/api';
 
@@ -37,9 +35,10 @@ async function getCurrentProfile() {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
     if (sessionError || !session?.access_token) {
-        throw sessionError;
+        console.error('Session error:', sessionError);
+        throw new Error('No session found');
     }
-
+    
     const response = await fetch(`${API_BASE_URL}/me`, {
         method: 'GET',
         headers: {
@@ -50,10 +49,12 @@ async function getCurrentProfile() {
 
     if (!response.ok) {
         const text = await response.text();
+        console.error('Profile fetch error:', text);
         throw new Error(`${response.status} ${response.statusText}: ${text}`);
     } 
 
-    return response.json();
+    const data = await response.json();
+    return data;
 }
 
 export default function EditProfile() {
@@ -70,10 +71,18 @@ export default function EditProfile() {
 
         try {
             await editUserName({ newUsername });
-            Alert.alert("Success", "Profile updated successfully");
+            if (Platform.OS === 'web') {
+                window.alert("Profile updated successfully");
+            } else {
+                Alert.alert("Success", "Profile updated successfully");
+            }
             router.back();
         } catch (error: any) {
-            Alert.alert("Error", error?.message ?? "Failed to update profile");
+            if (Platform.OS === 'web') {
+                window.alert(`Error: ${error?.message ?? "Failed to update profile"}`);
+            } else {
+                Alert.alert("Error", error?.message ?? "Failed to update profile");
+            }
         } finally {
             setSaving(false);
         }
@@ -82,7 +91,7 @@ export default function EditProfile() {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable onPress={handleSave} disabled={saving}>
+                <Pressable onPress={handleSave} disabled={saving} className="mr-4">
                     <Text className="text-[#A6192E] font-bold text-xl">
                         Save
                     </Text>
@@ -96,8 +105,14 @@ export default function EditProfile() {
             try {
                 const data = await getCurrentProfile();
                 setNewUsername(data.profile.display_name);
-            } catch (error) {
-                Alert.alert("Error", "Failed to load profile");
+            } catch (error: any) {
+                console.error('Load profile error:', error);
+                const errorMsg = error?.message ?? "Failed to load profile";
+                if (Platform.OS === 'web') {
+                    window.alert(`Error: ${errorMsg}`);
+                } else {
+                    Alert.alert("Error", errorMsg);
+                }
             } finally {
                 setLoading(false);
             }
@@ -114,7 +129,10 @@ export default function EditProfile() {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback 
+            onPress={Keyboard.dismiss}
+            disabled={Platform.OS === 'web'}
+        >
             <View className="flex-1 w-[90%] self-center mt-4 gap-2">
                 <Text className="text-md text-gray-600 font-bold">Username</Text>
                 <TextInput 

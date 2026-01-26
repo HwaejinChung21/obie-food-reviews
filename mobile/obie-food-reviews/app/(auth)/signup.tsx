@@ -10,6 +10,7 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
     const router = useRouter();
 
@@ -18,8 +19,12 @@ export default function SignUp() {
     
         try {
           if (!email.endsWith('@oberlin.edu')) {
-            Alert.alert('Error', 'Please use your @oberlin.edu email address')
-    
+            if (Platform.OS === 'web') {
+                window.alert('Error: Please use your @oberlin.edu email address')
+            } else {
+                Alert.alert('Error', 'Please use your @oberlin.edu email address')
+            }
+            
             return
           }
     
@@ -29,11 +34,19 @@ export default function SignUp() {
           } = await supabase.auth.signUp({ email: email, password: password })
     
           if (error) {
-            Alert.alert(error.message)
+            if (Platform.OS === 'web') {
+                window.alert(`Error: ${error.message}`)
+            } else {
+                Alert.alert('Error', error.message)
+            }
           }
     
           if (!session) {
-            Alert.alert('Please check your email for the confirmation link!') 
+            if (Platform.OS === 'web') {
+                window.alert('Please check your email for the confirmation link!')
+            } else {
+                Alert.alert('Please check your email for the confirmation link!')
+            }
           } 
     
         } finally {
@@ -99,15 +112,15 @@ return (
                         <Ionicons name="lock-closed-outline" size={24} color="#A6192E" />
                         <TextInput
                             placeholder="Confirm Password"
-                            secureTextEntry={!showPassword}
+                            secureTextEntry={!showConfirmPassword}
                             className="flex-1 ml-3 text-gray-900"
                             placeholderTextColor="#9CA3AF"
                             onChangeText={(text) => setConfirmPassword(text)}
                             value={confirmPassword}
                         />
-                        <Pressable onPress={() => setShowPassword(!showPassword)}>
+                        <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
                             <Ionicons 
-                            name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                            name={showConfirmPassword ? "eye-outline" : "eye-off-outline"} 
                             size={24} 
                             color="#9CA3AF" 
                             />
@@ -123,7 +136,11 @@ return (
                     disabled={loading} 
                     onPress={() => {
                         if (password !== confirmPassword) {
-                            Alert.alert('Error', 'Passwords do not match');
+                            if (Platform.OS === 'web') {
+                                window.alert('Error: Passwords do not match');
+                            } else {
+                                Alert.alert('Error', 'Passwords do not match');
+                            }
                             return;
                         }
                         signUpWithEmail();

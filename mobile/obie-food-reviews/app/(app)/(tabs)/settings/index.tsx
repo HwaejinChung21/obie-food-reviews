@@ -15,6 +15,20 @@ type SettingsItem = {
 
 export default function SettingsIndex() {
     const router = useRouter();
+    const [loading, setLoading] = React.useState(false);
+
+    async function handleSignOut() {
+        setLoading(true);
+        try {
+            await supabase.auth.signOut();
+            router.replace('/(auth)/login');
+        } catch (error) {
+            console.error('Error signing out:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const settingsSections = [
         {
             id: "account",
@@ -32,7 +46,7 @@ export default function SettingsIndex() {
                     label: "Change Password",
                     icon: "lock-closed-outline",
                     type: "link",
-                    to: "../../(auth)/reset-password",
+                    to: "/(auth)/reset-password",
                 },
                 {
                     id:"my-reviews",
@@ -81,10 +95,13 @@ export default function SettingsIndex() {
                 />
             </View>
             <Pressable 
-                onPress={() => supabase.auth.signOut()}
-                className="bg-[#A6192E] w-1/2 pt-2 pb-2 self-center rounded-xl "
+                disabled={loading}
+                onPress={handleSignOut}
+                className={`bg-[#A6192E] w-1/2 pt-2 pb-2 mb-4 self-center rounded-xl ${loading ? 'opacity-50' : ''}`}
             >
-                <Text className="text-white text-center text-lg py-2 font-bold">Sign out</Text>
+                <Text className="text-white text-center text-lg py-2 font-bold">
+                    {loading ? 'Signing out...' : 'Sign out'}
+                </Text>
             </Pressable>
         </SafeAreaView>
     )

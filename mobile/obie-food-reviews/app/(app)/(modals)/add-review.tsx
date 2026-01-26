@@ -249,12 +249,20 @@ export default function AddReview() {
 								rating: rating,
 								description: description
 							})
-						
-							Alert.alert("Success", "Your review has been submitted")
+							
+							if (Platform.OS === 'web') {
+								window.alert('Your review has been submitted');
+							} else {
+								Alert.alert('Success', 'Your review has been submitted');
+							}
 							router.back();
 						
 						} catch (error: any) {
-							Alert.alert("Failed to submit review", error?.message ?? "Please try again");
+							if (Platform.OS === 'web') {
+								window.alert("Failed to submit review: " + (error?.message ?? "Please try again"));
+							} else {
+								Alert.alert("Failed to submit review", error?.message ?? "Please try again");
+							}
 						} finally {
 							setPosting(false);
 						}
