@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -20,28 +20,7 @@ export default function UpdatePassword() {
   const [loading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [ready, setReady] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
-        setReady(true);
-      }
-    });
-
-    (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
-        setReady(true);
-      }
-    })();
-
-    return () => {
-      sub.subscription.unsubscribe();
-    };
-  }, []);
-
 
   async function updatePassword() {
     if (!password || !confirmPassword) {
@@ -67,17 +46,17 @@ export default function UpdatePassword() {
       }
     } else {
       if (Platform.OS === 'web') {
-        window.alert("Success: Your password has been updated.");
+        window.alert("Success: Your password has been updated. Please log in with your new password.");
         await supabase.auth.signOut();
         router.replace("/(auth)/login");
       } else {
-        Alert.alert("Success", "Your password has been updated.", [
+        Alert.alert("Success", "Your password has been updated. Please log in with your new password.", [
           {
             text: "OK",
-            onPress: () => async () => {
-                await supabase.auth.signOut();
-                router.replace("/(auth)/login");
-            }
+            onPress: async () => {
+              await supabase.auth.signOut();
+              router.replace("/(auth)/login");
+            },
           },
         ]);
       }
@@ -151,36 +130,23 @@ export default function UpdatePassword() {
 
                 <View className="w-full px-8 mb-6">
                     <Pressable
-                    disabled={loading || !ready}
+                    disabled={loading}
                     onPress={() => {
-                        if (!ready) {
-                            if (Platform.OS === "web") {
-                                window.alert("Please open the password reset link from your email.");
-                            } else {
-                                Alert.alert(
-                                "Not ready",
-                                "Please open the password reset link from your email."
-                                );
-                            }
-                            return;
-                        }
-
                         if (password !== confirmPassword) {
-                            if (Platform.OS === 'web') {
-                                window.alert("Error: Passwords do not match");
-                            } else {
-                                Alert.alert("Error", "Passwords do not match");
-                            }
-                            return;
+                          if (Platform.OS === 'web') {
+                            window.alert("Error: Passwords do not match");
+                          } else {
+                            Alert.alert("Error", "Passwords do not match");
+                          }
+                          return;
                         }
-
                         updatePassword();
                     }}
                     className="bg-[#fff7e4] w-full pt-2 pb-2 rounded-xl"
                     >
-                    <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">
-                        Reset Password
-                    </Text>
+                        <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">
+                            Reset Password
+                        </Text>
                     </Pressable>
                 </View>
                 </View>
