@@ -16,7 +16,7 @@ async function bootstrap() {
 
       return allowed ? cb(null, true) : cb(new Error("Blocked by CORS"), false);
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   });
 
