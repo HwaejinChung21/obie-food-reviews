@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons';      
 
@@ -10,6 +10,7 @@ type ReviewCardProps = {
     rating: number;
     description: string | null;
     servedDate: string;
+    onDelete?: () => void;
 }
 
 function formatDate(dateStr: string): string {
@@ -24,7 +25,8 @@ export default function ReviewCard({
     meal,
     rating,
     description,
-    servedDate
+    servedDate,
+    onDelete
 }: ReviewCardProps) {
     return (
         <View className="bg-white p-4 mb-4" style={{ borderRadius: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 }}>
@@ -34,9 +36,16 @@ export default function ReviewCard({
                         <Text className="font-bold">{displayName}</Text> rated <Text className="font-bold">{diningHall}</Text>
                     </Text>
                 </View>
-                <View className="flex-row items-center bg-yellow-50 px-3 py-1 rounded-full ml-2">
-                    <Ionicons name="star" size={16} color="#FCD34D" />
-                    <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{rating}</Text>
+                <View className="flex-row items-center ml-2">
+                    <View className="flex-row items-center bg-yellow-50 px-3 py-1 rounded-full">
+                        <Ionicons name="star" size={16} color="#FCD34D" />
+                        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{rating}</Text>
+                    </View>
+                    {onDelete && (
+                        <Pressable onPress={onDelete} className="ml-3 p-1">
+                            <Ionicons name="trash-outline" size={20} color="#EF4444" />
+                        </Pressable>
+                    )}
                 </View>
             </View>
             

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, RefreshControl, Alert, Platform } from 'react-native';
 import { supabase } from '@/lib/supabase.client';
 import { API_BASE_URL } from '@/config/api';
 import ReviewCard from '@/components/ReviewCard';
@@ -26,6 +26,26 @@ async function fetchMyReviewsAPI() {
     }
 
     return response.json();
+}
+
+async function deleteReviewAPI(menuItemId: string) {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError || !session?.access_token) {
+        throw sessionError;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/ratings/${menuItemId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${session.access_token}`
+        },
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status} ${response.statusText}: ${text}`);
+    }
 }
 
 export default function MyReviews() {
@@ -69,6 +89,37 @@ export default function MyReviews() {
         setRefreshing(false);
     }
 
+    const handleDelete = (reviewId: string, menuItemId: string) => {
+        const confirmDelete = async () => {
+            try {
+                await deleteReviewAPI(menuItemId);
+                setReviews(prev => prev.filter(r => r.id !== reviewId));
+            } catch (err: any) {
+                const msg = err?.message ?? 'Failed to delete review';
+                if (Platform.OS === 'web') {
+                    window.alert(msg);
+                } else {
+                    Alert.alert('Error', msg);
+                }
+            }
+        };
+
+        if (Platform.OS === 'web') {
+            if (window.confirm('Are you sure you want to delete this review?')) {
+                confirmDelete();
+            }
+        } else {
+            Alert.alert(
+                'Delete Review',
+                'Are you sure you want to delete this review?',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Delete', style: 'destructive', onPress: confirmDelete }
+                ]
+            );
+        }
+    };
+
     if (loading) {
         return (
             <View className="flex-1 justify-center items-center">
@@ -108,6 +159,7 @@ export default function MyReviews() {
                                 rating={item.rating}
                                 description={item.description}
                                 servedDate={item.servedDate}
+                                onDelete={() => handleDelete(item.id, item.menuItemId)}
                                 />
                     }
                     showsVerticalScrollIndicator={false}

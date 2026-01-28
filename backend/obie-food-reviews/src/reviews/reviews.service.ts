@@ -48,6 +48,7 @@ export class ReviewsService {
             
             return {
                 id: row.id,
+                menuItemId: row.menu_item_id,
                 displayName: row.profiles.display_name,
                 menuItemName: row.menu_items.name,
                 diningHall: row.menu_items.menu_snapshots.dining_hall,
