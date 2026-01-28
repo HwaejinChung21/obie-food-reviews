@@ -10,5 +10,4 @@ Demo: https://obie-food-reviews.expo.app
 
 **Backend:** NestJS, PostgreSQL (Supabase), JWT authentication
 
-**Data**
-- Automated menu ingestion from AVI Dining Services
+**Data:** Automated menu ingestion from AVI Dining Services
