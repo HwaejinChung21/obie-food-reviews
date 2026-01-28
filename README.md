@@ -26,10 +26,28 @@ The app is exclusively for Oberlin students, faculty, and staff — you'll need 
 
 ## Download
 
-Demo Currently Available on https://obie-food-reviews.expo.app
+Demo currently available on https://obie-food-reviews.expo.app
 
 ---
 
 ## Questions or Feedback?
 
 Have ideas for the app or found a bug? Reach out or open an issue — we'd love to hear from you!
+
+---
+
+## Built With
+
+**Mobile App**
+- React Native (Expo) with TypeScript
+- Expo Router for navigation
+- NativeWind (TailwindCSS)
+- Supabase Auth
+
+**Backend**
+- NestJS (Node.js)
+- PostgreSQL via Supabase
+- REST API with JWT authentication
+
+**Data**
+- Automated menu ingestion from AVI Dining Services
