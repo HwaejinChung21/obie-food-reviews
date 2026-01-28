@@ -97,7 +97,7 @@ export default function SettingsIndex() {
             <Pressable 
                 disabled={loading}
                 onPress={handleSignOut}
-                className={`bg-[#A6192E] w-1/2 pt-2 pb-2 mb-4 self-center rounded-xl ${loading ? 'opacity-50' : ''}`}
+                className={`bg-[#A6192E] w-[150px] pt-2 pb-2 mb-4 self-center rounded-xl ${loading ? 'opacity-50' : ''}`}
             >
                 <Text className="text-white text-center text-lg py-2 font-bold">
                     {loading ? 'Signing out...' : 'Sign out'}

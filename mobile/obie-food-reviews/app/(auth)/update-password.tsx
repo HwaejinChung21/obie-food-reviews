@@ -27,7 +27,7 @@ export default function UpdatePassword() {
       if (Platform.OS === 'web') {
         window.alert("Error: Please fill in all fields");
       } else {
-        Alert.alert("Error", "Please fill in all fields");
+        Alert.alert("Error: Please fill in all fields");
       }
       return;
     }
@@ -42,7 +42,7 @@ export default function UpdatePassword() {
       if (Platform.OS === 'web') {
         window.alert("Error: " + error.message);
       } else {
-        Alert.alert("Error", error.message);
+        Alert.alert("Error: " + error.message);
       }
     } else {
       if (Platform.OS === 'web') {
@@ -79,7 +79,7 @@ export default function UpdatePassword() {
                 </Pressable>
 
                 <Text className="flex self-center text-white text-3xl font-bold mt-4 mb-14">
-                    Reset Password
+                    Update Password
                 </Text>
 
                 <View className="bg-white rounded-xl mt-4 mb-4 p-4 w-5/6 self-center">
@@ -145,7 +145,7 @@ export default function UpdatePassword() {
                     className="bg-[#fff7e4] w-full pt-2 pb-2 rounded-xl"
                     >
                         <Text className="text-[#A6192E] text-center text-lg py-2 font-medium">
-                            Reset Password
+                            Update Password
                         </Text>
                     </Pressable>
                 </View>

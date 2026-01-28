@@ -18,39 +18,41 @@ export default function SignUp() {
         setLoading(true)
     
         try {
-          if (!email.endsWith('@oberlin.edu')) {
-            if (Platform.OS === 'web') {
-                window.alert('Error: Please use your @oberlin.edu email address')
-            } else {
-                Alert.alert('Error', 'Please use your @oberlin.edu email address')
+            if (!email.endsWith('@oberlin.edu')) {
+                if (Platform.OS === 'web') {
+                    window.alert('Error: Please use your @oberlin.edu email address')
+                } else {
+                    Alert.alert('Error', 'Please use your @oberlin.edu email address')
+                }
+                return
             }
-            
-            return
-          }
+
+            const redirectUrl = Platform.OS === 'web' 
+                ? `${window.location.origin}/login`
+                : "https://obie-food-reviews.expo.app/login";
     
-          const {
-            data: { session },
-            error,
-          } = await supabase.auth.signUp({ email: email, password: password })
+            const { data: { session }, error } = await supabase.auth.signUp({ email: email, password: password, options: {
+                emailRedirectTo: redirectUrl
+            } });
     
-          if (error) {
-            if (Platform.OS === 'web') {
-                window.alert(`Error: ${error.message}`)
-            } else {
-                Alert.alert('Error', error.message)
+            if (error) {
+                if (Platform.OS === 'web') {
+                    window.alert(`Error: ${error.message}`)
+                } else {
+                    Alert.alert(`Error: ${error.message}`)
+                }
             }
-          }
     
-          if (!session) {
-            if (Platform.OS === 'web') {
-                window.alert('Please check your email for the confirmation link!')
-            } else {
-                Alert.alert('Please check your email for the confirmation link!')
-            }
-          } 
-    
+            if (!session) {
+                if (Platform.OS === 'web') {
+                    window.alert('Please check your email for the confirmation link! (Check spam folder too!)')
+                } else {
+                    Alert.alert('Please check your email for the confirmation link! (Check spam folder too!)')
+                }
+            } 
+        
         } finally {
-          setLoading(false)
+        setLoading(false)
         }
     }
 

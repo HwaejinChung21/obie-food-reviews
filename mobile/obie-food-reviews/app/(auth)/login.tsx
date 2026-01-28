@@ -1,6 +1,6 @@
 import { View, Text, Alert, Image, TextInput, Pressable, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native'
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react'
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase.client';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,7 +10,14 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { confirmed } = useLocalSearchParams();
   const router = useRouter();
+
+  useEffect(() => {
+    if (confirmed && Platform.OS === 'web') {
+      window.history.replaceState({}, '', '/login');
+    }
+  }, [confirmed]);
 
   async function signInWithEmail() {
     setLoading(true)
@@ -47,7 +54,6 @@ export default function Login() {
   }
 
 
-
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -72,7 +78,14 @@ export default function Login() {
               )}
             </Pressable>
           </View>
-          <View className="bg-white rounded-xl mb-4 p-4 w-5/6 self-center">
+          {confirmed === "1" && (
+            <View className="bg-green-100 border border-green-300 rounded-lg px-4 py-3 mb-4 w-5/6 self-center">
+              <Text className="text-green-800 text-center font-medium">
+                ✅ Email confirmed. Please sign in.
+              </Text>
+            </View>
+          )}
+          <View className="bg-white rounded-xl mb-4 p-4 w-[250px] max-w-[66%] self-center">
             {/* Email Input */}
             <View className="flex-row items-center border-b border-gray-200 pb-4 mb-4">
               <Ionicons name="mail-outline" size={24} color="#A6192E" />
@@ -121,7 +134,7 @@ export default function Login() {
             <Pressable 
               disabled={loading} 
               onPress={() => signInWithEmail()}
-              className="bg-[#fff7e4] w-5/6 pt-2 pb-2 self-center rounded-xl"
+              className="bg-[#fff7e4] w-[200px] pt-2 pb-2 self-center rounded-xl"
             >
               {({ pressed }) => (
                 <View

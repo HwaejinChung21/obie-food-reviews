@@ -50,9 +50,9 @@ export default function ResetPassword() {
             }
         } else {
             if (Platform.OS === 'web') {
-                window.alert('Success: Please check your email for the password reset link.')
+                window.alert('Success! Please check your email for the password reset link.')
             } else {
-                Alert.alert('Success', 'Please check your email for the password reset link.')
+                Alert.alert('Success! Please check your email for the password reset link.')
             }
             [
                 {
