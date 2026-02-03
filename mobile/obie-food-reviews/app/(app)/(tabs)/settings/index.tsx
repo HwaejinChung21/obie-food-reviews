@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable, SectionList } from 'react-native'
+import { View, Text, Button, Pressable, SectionList, Linking } from 'react-native'
 import React from 'react'
 import { supabase } from '@/lib/supabase.client'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -94,6 +94,15 @@ export default function SettingsIndex() {
                     }}
                 />
             </View>
+            
+            <Pressable
+                onPress={()=> Linking.openURL('https://forms.gle/PAJ6GCEBLkc5LJ8P7')}
+                className="flex-row items-center bg-[#A6192E] w-[200px] justify-center py-3 mb-4 self-center rounded-xl gap-2"
+            >
+                <Ionicons name="chatbubble-ellipses-outline" size={20} color="white" />
+                <Text className="text-white text-center text-lg font-bold">Leave Feedback</Text>
+            </Pressable>
+
             <Pressable 
                 disabled={loading}
                 onPress={handleSignOut}
