@@ -2,6 +2,12 @@ import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons';      
 
+
+/**
+ * Displays a user's review for a menu item.
+ * Shows user name, dining hall, rating, menu item details, and optional description.
+ * Optionally displays a delete button when onDelete is provided.
+ */
 type ReviewCardProps = {
     displayName: string;
     diningHall: string;
@@ -13,6 +19,9 @@ type ReviewCardProps = {
     onDelete?: () => void;
 }
 
+/**
+ * Formats a date string into a readable format (e.g., "Feb 6, 2026").
+ */
 function formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });

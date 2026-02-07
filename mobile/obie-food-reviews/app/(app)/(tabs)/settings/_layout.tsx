@@ -20,13 +20,6 @@ export default function SettingsLayout() {
           headerTitleStyle: {
             color: "#000000"
           },
-        //   headerRight: () => (
-        //     <Pressable onPress={() => console.log('Button pressed')}>
-        //       <Text style={{ color: "#A6192E", fontSize: 18, fontWeight: "600" }}>
-        //         Save
-        //       </Text>
-        //     </Pressable>
-        //   )
         }}
       />
       <Stack.Screen

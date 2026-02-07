@@ -1,8 +1,18 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { supabaseAdmin } from '../lib/supabase.admin';
 
+/**
+ * Handles review data operations.
+ * Manages fetching reviews from Supabase, including all reviews and reviews specific to a user.
+ */
 @Injectable()
 export class ReviewsService {
+
+    /**
+     * Fetches all reviews from the database, including related profile and menu item information.
+     * @returns A list of all reviews with associated profile and menu item details
+     * @throws {InternalServerErrorException} If fetching reviews fails
+     */
     async fetchReviews() {
         const { data, error } = await supabaseAdmin
             .from('ratings')
@@ -31,6 +41,12 @@ export class ReviewsService {
         });
     }
 
+    /**
+     * Fetches reviews for a specific user from the database, including related profile and menu item information.
+     * @param requestedUserId The ID of the user whose reviews are to be fetched
+     * @returns A list of reviews by the specified user with associated profile and menu item details
+     * @throws {InternalServerErrorException} If fetching the user's reviews fails
+     */
     async fetchMyReviews(requestedUserId: string) {
         const { data, error } = await supabaseAdmin
             .from('ratings')

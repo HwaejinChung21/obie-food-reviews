@@ -4,10 +4,19 @@ import { supabaseAdmin } from 'src/lib/supabase.admin';
 
 type Meal = 'breakfast' | 'lunch' | 'dinner';
 
+/**
+ * Handles menu data operations.
+ * Fetches menus from the AVI API and manages menu storage in Supabase.
+ */
 @Injectable()
 export class MenusService {
 
-    // Get meal ID from environment variable mapping
+    /**
+     * A helper method to get the AVI meal ID from environment variables.
+     * @param meal - Meal type ('breakfast', 'lunch', 'dinner')
+     * @returns Corresponding meal ID number
+     * @throws Error if AVI_MEAL_IDS is missing or meal ID not found
+     */
     private getMealId(meal: Meal): number {
         const raw = process.env.AVI_MEAL_IDS;
         if (!raw) throw new Error('Missing AVI_MEAL_IDS');
@@ -22,7 +31,11 @@ export class MenusService {
         return id;
     }
 
-    // Format date as M/D/YYYY for AVI API
+    /**
+     * A helper method to format a Date object into AVI API date string.
+     * @param d - Date object to format
+     * @returns Formatted date string in M/D/YYYY format
+     */
     private formatAviDate(d: Date) {
         const month = d.getMonth() + 1; // 0-based
         const day = d.getDate();
@@ -30,7 +43,15 @@ export class MenusService {
         return `${month}/${day}/${year}`; // e.g. "1/11/2026"
     }
 
-    // Fetch menus from AVI API
+
+    /**
+     * Fetch menus from the AVI API for a given meal and date.
+     * @param meal - Meal type ('breakfast', 'lunch', 'dinner')
+     * @param date - Date for which to fetch menus (default: current date)
+     * @returns Menu items fetched from the AVI API
+     * @throws Error if AVI_BASE_URL or AVI_LOCATION_ID_STEVENSON is missing
+     * @throws Error if fetching menus fails
+     */
     async fetchMenus(meal: Meal, date = new Date()) {
         const aviDate = this.formatAviDate(date);
         const mealId = this.getMealId(meal);
@@ -49,17 +70,22 @@ export class MenusService {
         }
 
         const data = await response.json();
-        const raw = JSON.stringify(data);
         return data;
         
     }
 
+    /**
+     * Ingests weekly menus from AVI API into the database.
+     * Fetches breakfast, lunch, and dinner menus for Stevenson dining hall,
+     * groups items by date, and upserts into menu_snapshots and menu_items tables.
+     * @returns {{ status: 'ingested' }} Success status object
+     * @throws Error if any database operation fails
+     */
     async ingestWeekMenus() {
         const meals: Meal[] = ['breakfast', 'lunch', 'dinner'];
         const diningHall = "Stevenson";
         
         for (const meal of meals) {
-            const mealId = this.getMealId(meal);
             const items = await this.fetchMenus(meal, new Date());
             console.log(`Fetched ${items?.length} items for ${meal}`);
 
@@ -119,6 +145,11 @@ export class MenusService {
         return { status: 'ingested' };
     }
 
+    /**
+     * A helper method to group menu items by their station names (e.g. Trattoria Dinner, Roots Dinner).
+     * @param items Array of menu items to be grouped
+     * @returns Array of stations with their corresponding menu items
+     */
     private groupByStation(items: any[]) {
         const map = new Map<string, any[]>();
 
@@ -143,6 +174,11 @@ export class MenusService {
         );
     }
 
+    /**
+     * Fetches menu items for a specific dining hall, meal, and date from the database.
+     * @param param0 Object containing diningHall, meal, and servedDate
+     * @returns Structured menu data including snapshot and stations
+     */
     async fetchMenusFromDB({ diningHall, meal, servedDate }: { diningHall: string; meal: string; servedDate: string }) {
         const { data, error } = await supabaseAdmin
             .from('menu_snapshots')

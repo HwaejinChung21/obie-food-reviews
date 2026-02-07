@@ -5,6 +5,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { useRouter } from 'expo-router';
 
+/**
+ * Password reset request screen.
+ * Sends a reset link to the user's @oberlin.edu email.
+ */
 export default function ResetPassword() {
     const [email, setEmail] = React.useState('');
     const [loading, setLoading] = React.useState(false);

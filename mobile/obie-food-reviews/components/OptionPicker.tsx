@@ -4,6 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 type Option = { label: string; value: string };
 
+/**
+ * A pressable row that displays a label and selected value.
+ * Opens a picker modal when tapped.
+ */
 export default function OptionPicker(props: {
     label: string;
     value: string;

@@ -1,8 +1,20 @@
 import { BadRequestException, InternalServerErrorException, Injectable } from '@nestjs/common';
 import { supabaseAdmin } from 'src/lib/supabase.admin';
 
+/**
+ * Handles rating data operations.
+ * Manages user ratings for menu items in Supabase, including creating/updating and deleting ratings.
+ */
 @Injectable()
 export class RatingsService {
+
+    /**
+     * Creates or updates a rating for a menu item by a specific user.
+     * @param params An object containing userId, menuItemId, rating, and an optional description
+     * @returns The created or updated rating record
+     * @throws {BadRequestException} If the input data violates database constraints (e.g., invalid rating value, foreign key violation)
+     * @throws {InternalServerErrorException} If the upsert operation fails for other reasons
+     */
     async upsertRating(params: { userId: string; menuItemId: string; rating: number; description?: string }) {
         const { userId, menuItemId, rating, description } = params;
 
@@ -34,6 +46,12 @@ export class RatingsService {
         return data;
     }
 
+    /**
+     * Deletes a user's rating for a specific menu item.
+     * @param userId The ID of the user whose rating is to be deleted
+     * @param menuItemId The ID of the menu item for which the rating is to be deleted
+     * @throws {InternalServerErrorException} If the delete operation fails
+     */
     async deleteRating(userId: string, menuItemId: string,) {
         const { error } = await supabaseAdmin
             .from('ratings')

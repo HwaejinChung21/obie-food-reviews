@@ -3,10 +3,22 @@ import type { Request } from 'express';
 import { ProfilesService } from './profiles.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 
+/**
+ * A ProfilesController to handle profile-related endpoints.
+ * Provides routes to get and update user profiles.
+ */
 @Controller()
 export class ProfilesController {
     constructor(private readonly profilesService: ProfilesService) {}
 
+    /**
+     * Gets the authenticated user's profile information.
+     * Requires authentication via SupabaseAuthGuard.
+     * @param request - Express request object containing authenticated user info
+     * @returns An object containing auth info and profile data
+     * @throws {UnauthorizedException} If user is not authenticated
+     * @route GET /me
+     */
     @UseGuards(SupabaseAuthGuard)
     @Get('/me')
     async me(@Req() request: Request) {
@@ -21,6 +33,16 @@ export class ProfilesController {
         }
     }
 
+    /**
+     * Updates the authenticated user's display name.
+     * Requires authentication via SupabaseAuthGuard.
+     * @param request - Express request object containing authenticated user info and new display name
+     * @returns An object containing auth info and updated profile data
+     * @throws {UnauthorizedException} If user is not authenticated
+     * @throws {BadRequestException} If display_name is invalid (wrong type, length, or characters)
+     * @throws {ConflictException} If display_name is already taken
+     * @route PATCH /me
+     */
     @UseGuards(SupabaseAuthGuard)
     @Patch('/me')
     async updateMe(@Req() request: Request) {

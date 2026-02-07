@@ -4,7 +4,10 @@ import React, { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase.client';
 import { Ionicons } from '@expo/vector-icons';
 
-
+/**
+ * Login screen with email/password authentication.
+ * Validates @oberlin.edu email domain before allowing access.
+ */
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

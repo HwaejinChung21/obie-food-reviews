@@ -5,6 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+/**
+ * Sign up screen for new users.
+ * Restricted to @oberlin.edu email addresses, sends confirmation email.
+ */
 export default function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

@@ -1,9 +1,13 @@
 import React from "react";
-import { Modal, Pressable, View, Text, ActivityIndicator, SectionList, ScrollView, StyleSheet } from "react-native";
+import { Modal, Pressable, Text, ActivityIndicator, SectionList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 type Station = { name: string; items: { id: string; name: string }[] };
 
+/**
+ * Bottom sheet modal for selecting a menu item.
+ * Groups items by station and displays them in a sectioned list.
+ */
 export default function MenuItemPickerModal(props: {
     visible: boolean;
     title: string;

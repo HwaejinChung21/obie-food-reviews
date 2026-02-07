@@ -5,6 +5,11 @@ import { API_BASE_URL } from '@/config/api';
 import ReviewCard from '@/components/ReviewCard';
 import { useFocusEffect } from 'expo-router'
 
+/**
+ * Fetches all reviews submitted by the authenticated user.
+ * @returns Array of user's reviews
+ * @throws Error if session is invalid or API request fails
+ */
 async function fetchMyReviewsAPI() {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
@@ -28,6 +33,11 @@ async function fetchMyReviewsAPI() {
     return response.json();
 }
 
+/**
+ * Deletes a specific review by menu item ID.
+ * @param menuItemId - The ID of the menu item to remove the rating for
+ * @throws Error if session is invalid or API request fails
+ */
 async function deleteReviewAPI(menuItemId: string) {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
@@ -48,6 +58,10 @@ async function deleteReviewAPI(menuItemId: string) {
     }
 }
 
+/**
+ * Screen displaying all reviews submitted by the current user.
+ * Supports pull-to-refresh.
+ */
 export default function MyReviews() {
     const [reviews, setReviews] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);

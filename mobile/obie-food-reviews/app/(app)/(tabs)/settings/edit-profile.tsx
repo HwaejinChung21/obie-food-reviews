@@ -4,6 +4,12 @@ import { supabase } from "@/lib/supabase.client";
 import { useRouter, useNavigation } from "expo-router";
 import { API_BASE_URL } from '@/config/api';
 
+/**
+ * Updates the user's display name via the backend API.
+ * @param params - Object containing the new username
+ * @returns Updated profile data
+ * @throws Error if session is invalid or API request fails
+ */
 async function editUserName(params: { newUsername: string }) {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
@@ -31,6 +37,11 @@ async function editUserName(params: { newUsername: string }) {
 	return response.json();
 }
 
+/**
+ * Fetches the current user's profile from the backend.
+ * @returns Profile data including display name
+ * @throws Error if session is invalid or API request fails
+ */
 async function getCurrentProfile() {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
@@ -57,6 +68,10 @@ async function getCurrentProfile() {
     return data;
 }
 
+
+/**
+ * Screen for editing the user's profile (display name).
+ */
 export default function EditProfile() {
     const [newUsername, setNewUsername] = useState("");
     const [loading, setLoading] = useState(false);

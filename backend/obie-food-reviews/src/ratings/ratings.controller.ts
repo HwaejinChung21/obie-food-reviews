@@ -3,10 +3,24 @@ import { RatingsService } from './ratings.service';
 import { SupabaseAuthGuard } from 'src/auth/supabase-auth.guard';
 import type { Request } from 'express';
 
+/**
+ * A RatingsController to handle rating-related endpoints.
+ * Provides routes to create/update and delete ratings for menu items.
+ * All endpoints require authentication via SupabaseAuthGuard.
+ */
 @Controller()
 export class RatingsController {
     constructor(private readonly ratingsService: RatingsService) {}
 
+    /**
+     * Creates or updates a rating for a menu item by the authenticated user.
+     * Validates input data and ensures the user is authenticated.
+     * @param request The Express request object containing user information
+     * @param body The request body containing rating details
+     * @returns The created or updated rating
+     * @throws BadRequestException if input data is invalid (e.g., missing fields, invalid types, out-of-range values)
+     * @route PUT /ratings
+     */
     @UseGuards(SupabaseAuthGuard)
     @Put('/ratings')
     async createOrUpdateRating(@Req() request: Request, @Body() body: any) {
@@ -34,7 +48,6 @@ export class RatingsController {
             throw new BadRequestException('rating must be an integer between 1 and 5');
         }
 
-        // description: optional, trim, empty -> null, max 280
         if (description === undefined || description === null) {
             description = null;
         } else {
@@ -61,6 +74,15 @@ export class RatingsController {
         });
     }
 
+    /**
+     * Deletes the authenticated user's rating for a specific menu item.
+     * Requires authentication and validates the menuItemId parameter.
+     * @param request The Express request object containing user information
+     * @param menuItemId The ID of the menu item for which to delete the rating
+     * @returns No content (204) on successful deletion
+     * @throws BadRequestException if menuItemId is invalid (e.g., missing, not a string, not a UUID)
+     * @route DELETE /ratings/:menuItemId
+     */
     @UseGuards(SupabaseAuthGuard)
     @Delete('/ratings/:menuItemId')
     @HttpCode(204)

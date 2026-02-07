@@ -12,7 +12,10 @@ type SettingsItem = {
     type: string;
     to: string;
 }
-
+/**
+ * Main settings screen with navigation to account settings.
+ * Includes sign-out functionality.
+ */
 export default function SettingsIndex() {
     const router = useRouter();
     const [loading, setLoading] = React.useState(false);

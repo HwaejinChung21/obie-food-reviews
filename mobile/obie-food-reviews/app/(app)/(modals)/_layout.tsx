@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { router, Stack } from "expo-router";
 import { Pressable } from "react-native";
 
+/** Modal stack layout with shared header configuration. */
 export default function ModalLayout() {
   return (
     <Stack

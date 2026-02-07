@@ -4,6 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 type Option = { label: string; value: string };
 
+/**
+ * Bottom sheet modal for selecting a single option from a list.
+ * Displays options with checkmark indicator for the selected value.
+ */
 export default function OptionPickerModal(props: {
     visible: boolean;
     title: string;
@@ -30,8 +34,8 @@ export default function OptionPickerModal(props: {
                     <Pressable
                         key={option.value}
                         onPress={() => {
-                        onSelect(option.value);
-                        onClose();
+                            onSelect(option.value);
+                            onClose();
                         }}
                         className="py-4 flex-row items-center justify-between border-b border-gray-200"
                     >

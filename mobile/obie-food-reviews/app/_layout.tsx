@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Stack, Redirect, usePathname } from "expo-router";
 import { supabase } from "@/lib/supabase.client";
 import { View, ActivityIndicator, StatusBar } from "react-native";
-
 import "./global.css"
 
+/**
+ * Root layout that manages authentication state and routing.
+ * Redirects unauthenticated users to login, authenticated users to feed.
+ * Handles special case for password reset flow (update-password route).
+ */
 export default function RootLayout() {
   const [checked, setChecked] = useState(false);
   const [hasSession, setHasSession] = useState(false);
@@ -62,12 +66,10 @@ export default function RootLayout() {
       <>
         <StatusBar barStyle="dark-content" />
         <Stack screenOptions={{ headerShown: false }}>
-          {/* We keep these defined so the routes exist */}
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(app)" />
         </Stack>
 
-        {/* The "Enforcer": This pushes the user if they are in the wrong spot */}
         {!hasSession ? (
           <Redirect href="/(auth)/login" />
         ) : (

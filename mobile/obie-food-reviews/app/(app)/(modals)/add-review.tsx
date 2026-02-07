@@ -27,6 +27,11 @@ const DINING_HALL_OPTIONS: { label: string; value: string }[] = [
 	{ label: "Stevenson", value: "Stevenson" },
 ]
 
+/**
+ * Formats a Date object into a string in YYYY-MM-DD format for API usage.
+ * @param d - Date object to format
+ * @returns Formatted date string in YYYY-MM-DD format
+ */
 function formatDate(d: Date) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -34,6 +39,12 @@ function formatDate(d: Date) {
     return `${y}-${m}-${day}`;
 }
 
+/**
+ * Builds an array of date options for the last N days, formatted for display and API usage.
+ * This is necessary so that users can select menu items from the last week
+ * @param n - Number of days to include in the options
+ * @returns An array of date options with labels and values
+ */
 function buildLastNDaysOptions(n: number): DateOption[] {
     const options: DateOption[] = [];
     const today = new Date();
@@ -51,6 +62,12 @@ function buildLastNDaysOptions(n: number): DateOption[] {
     return options;
 }  
 
+/**
+ * Submits a review to the backend API.
+ * @param params - An object containing the menu item ID, rating, and optional description
+ * @returns The response from the API after submitting the review
+ * @throws An error if the session is invalid or the API request fails
+ */
 async function submitReview(params: {
 	menuItemId: string;
 	rating: number;
@@ -83,6 +100,10 @@ async function submitReview(params: {
 	return response.json();
 }
 
+/**
+ * Screen for submitting a new food review.
+ * Allows users to select dining hall, date, meal, menu item, and provide a rating with optional description.
+ */
 export default function AddReview() {
 	const router = useRouter();
     const [hall, setHall] = useState<string>('');

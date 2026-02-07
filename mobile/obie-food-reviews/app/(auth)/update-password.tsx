@@ -14,6 +14,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { useRouter } from "expo-router";
 
+/**
+ * Password update screen accessed via reset email link.
+ * Allows users to set a new password after verification.
+ */
 export default function UpdatePassword() {
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");

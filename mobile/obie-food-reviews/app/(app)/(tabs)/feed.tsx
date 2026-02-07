@@ -5,6 +5,10 @@ import { API_BASE_URL } from '../../../config/api';
 import ReviewCard from '../../../components/ReviewCard';
 import { useFocusEffect } from 'expo-router'
 
+/**
+ * Main feed screen displaying the latest reviews from all users.
+ * Supports pull-to-refresh and auto-refreshes on screen focus.
+ */
 export default function Feed() {
 
     const [reviews, setReviews ] = useState<any[]>([]);
